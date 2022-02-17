@@ -1,4 +1,3 @@
-//Declarativeway
 pipeline
 {
 agent{
@@ -7,16 +6,13 @@ label 'master'  ///run with master not slave
 tools{
 maven 'maven3.8.4'
 }
-triggers{
-pollSCM('* * * * *')
-//Build periodically
-//cron('* * * * *')
-//WebHooks
-//githubPush()
-}
 options{
-buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '6', daysToKeepStr: '', numToKeepStr: '6'))
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
 }
+triggers{
+    pollSCM('* * * * *')
+}
+
 stages{
 stage('CheckoutCode'){
 steps{
@@ -38,30 +34,13 @@ steps{
 sh "mvn deploy"
 }
 }
-stage('DeployToTomcat'){
+stage('DeployToTomcat')
+{
 steps{
 sshagent(['045adcbc-086d-462a-ae94-6da71ecf161d']) {
     sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.82.133:/opt/apache-tomcat-9.0.58/webapps/"
 }
 }
 }
-
 }//stages closing
-/*post{
-success{
-emailext to: 'sameerashk7@gmail.com',
-subject: "pipleline build is successful..Build # is ...${env.BUILD_NUMBER} and Build status is  ...$(currentBuild.result).",
-body: "pipleline build is successful..Build # is ...${env.BUILD_NUMBER} and Build status is  ...$(currentBuild.result)."
-replyTo:'sameerashk7@gmail.com'
-
-}
-failure{
-emailext to: 'sameerashk7@gmail.com',
-subject: "pipleline build is successful..Build # is ...${env.BUILD_NUMBER} and Build status is  ...$(currentBuild.result).",
-body: "pipleline build is successful..Build # is ...${env.BUILD_NUMBER} and Build status is  ...$(currentBuild.result)."
-replyTo:'sameerashk7@gmail.com'
-
-}
-}
-*/
 }//pipeline closing
