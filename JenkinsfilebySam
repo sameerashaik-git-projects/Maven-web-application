@@ -1,0 +1,42 @@
+//Declarative way
+
+pipeline
+{
+agent{
+label 'master'  ///run with master not slave
+}
+tools{
+maven 'maven3.8.4'
+}
+stages{
+stage('CheckoutCode'){
+steps{
+git branch: 'development', credentialsId: '4e4632d7-a85f-47f6-b1a4-573dd146e8f6', url: 'https://github.com/sameerashaik-git-projects/maven-web-application.git'
+}
+}
+stage('Build'){
+steps{
+sh "mvn clean package"
+}
+}
+stage('ExecuteSonarReport'){
+steps{
+sh "mvn clean sonar:sonar"
+}
+}
+stage('StoreArtifact'){
+steps{
+sh "mvn deploy"
+}
+}
+stage('DeployToTomcat'){
+steps{
+sshagent(['045adcbc-086d-462a-ae94-6da71ecf161d']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.82.133:/opt/apache-tomcat-9.0.58/webapps/"
+}
+}
+}
+
+}//stages closing
+
+}//pipeline closing
