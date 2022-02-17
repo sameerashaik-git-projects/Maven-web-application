@@ -1,5 +1,4 @@
 //Declarative way
-
 pipeline
 {
 agent{
