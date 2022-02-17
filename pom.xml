@@ -60,6 +60,7 @@
 		</dependency>
 
 		<!-- compile dependencies -->
+		<!--for poll scm just adding comment -->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
