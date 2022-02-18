@@ -24,6 +24,7 @@ steps{
 sh "mvn clean package"
 }
 }
+/*
 stage('ExecuteSonarReport'){
 steps{
 sh "mvn clean sonar:sonar"
@@ -42,5 +43,6 @@ sshagent(['045adcbc-086d-462a-ae94-6da71ecf161d']) {
 }
 }
 }
+*/
 }//stages closing
 }//pipeline closing
