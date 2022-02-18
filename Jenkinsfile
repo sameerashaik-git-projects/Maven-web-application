@@ -1,5 +1,7 @@
 pipeline{
-agent any
+	
+agent any  //default would be master
+	
 tools{
 maven 'maven3.8.2'
 
