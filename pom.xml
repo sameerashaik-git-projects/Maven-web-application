@@ -107,7 +107,7 @@
 	      <name>sami-snapshot</name>
 	      <url>http://13.235.69.117:9980/sami/repository/sami-snapshot/</url>
 	    </snapshotRepository>
-	    
+	   
 	</distributionManagement>
 	
 	<build>
