@@ -1,0 +1,43 @@
+pipeline{
+    agent{
+        label('master')
+    }
+    tools{
+        maven 'maven3.8.4'
+    }
+    stages{
+
+ stage('CheckoutCode'){
+ steps{
+  git branch: 'development', credentialsId: '4e4632d7-a85f-47f6-b1a4-573dd146e8f6', url: 'https://github.com/sameerashaik-git-projects/maven-web-application.git'
+ }
+ }
+ 
+ stage('Build'){
+  steps{
+  sh "mvn clean package"
+  }
+ }
+
+
+  stage('ExecuteSonarQubeReport'){
+  steps{
+  sh "mvn clean sonar:sonar"
+  }
+ }
+ 
+ stage('UploadArtifactIntoNexus'){
+  steps{
+  sh "mvn clean deploy"
+  }
+ }
+ stage('DeployAppIntoTomcatServer'){
+  steps{
+   sshagent(['045adcbc-086d-462a-ae94-6da71ecf161d']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.82.133:/opt/apache-tomcat-9.0.58/webapps/"
+        }
+        }
+ }
+    }//stagesclosing
+    
+}//pipeline closing
